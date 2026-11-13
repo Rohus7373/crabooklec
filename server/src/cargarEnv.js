@@ -2,8 +2,6 @@ import fs from 'node:fs'
 import { parseEnv } from 'node:util'
 import { fileURLToPath } from 'node:url'
 
-// Lee el archivo .env de la carpeta del proyecto (junto a app.js) y deja los valores en process.env.
-// Al arrancar avisa qué encontró, para saber rápido por qué la impresora no está configurada.
 const ruta = fileURLToPath(new URL('../.env', import.meta.url))
 
 if (!fs.existsSync(ruta)) {

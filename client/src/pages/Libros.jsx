@@ -5,7 +5,6 @@ import { aviso, confirmarEliminarLibro, devolverLibro, prestarLibro } from '../d
 import { Resaltar, textoContador } from '../utils.jsx'
 import ErrorPagina from '../components/ErrorPagina.jsx'
 
-// soloLectura: la cuenta de consulta solo busca libros y ve qué copias hay disponibles
 export default function Libros({ soloLectura = false }) {
     const navegar = useNavigate()
     const input = useRef(null)
@@ -18,13 +17,11 @@ export default function Libros({ soloLectura = false }) {
 
     const recargar = () => setVersion(v => v + 1)
 
-    // Busca mientras escribes (con una pequeña pausa para no saturar la base de datos)
     useEffect(() => {
         const espera = setTimeout(() => setConsulta(texto.trim()), 250)
         return () => clearTimeout(espera)
     }, [texto])
 
-    // Pide los libros; tras prestar, devolver o eliminar vuelve a pedirlos para actualizar las copias
     useEffect(() => {
         const controlador = new AbortController()
         api(`/libros?q=${encodeURIComponent(consulta)}`, { signal: controlador.signal })
@@ -50,7 +47,6 @@ export default function Libros({ soloLectura = false }) {
             await api(`/libros/${libro.ID_LIBRO}`, { method: 'DELETE' })
             recargar()
         } catch (e) {
-            // Con 409 el servidor explica por qué (hay copias sin devolver)
             if (e.status === 409) return aviso('warning', 'No se puede eliminar', e.message)
             aviso('error', 'No se pudo eliminar', e.message)
         }
@@ -59,12 +55,10 @@ export default function Libros({ soloLectura = false }) {
     const prestar = async (libro) => { if (await prestarLibro(libro, () => navegar('/usuarios/create'))) recargar() }
     const devolver = async (libro) => { if (await devolverLibro(libro)) recargar() }
 
-    // Seleccionar una fila (clic o Enter) muestra sus acciones
     const alPresionar = (e, libro) => {
         if (e.key === 'Enter' && e.target === e.currentTarget) setActiva(libro.ID_LIBRO)
     }
 
-    // Si la primera carga falla se muestra la página de error; si falla una búsqueda, el aviso va en el contador
     if (error && libros === null) return <ErrorPagina />
 
     return (

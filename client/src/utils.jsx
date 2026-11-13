@@ -1,4 +1,3 @@
-// Resalta en amarillo lo que coincide con lo escrito (React escapa el texto solo)
 export function Resaltar({ valor, texto }) {
     const original = String(valor ?? '')
     if (!texto) return original
@@ -16,7 +15,6 @@ export function Resaltar({ valor, texto }) {
     return <>{partes}</>
 }
 
-// Texto del contador bajo los buscadores (sinBusqueda: lo que se muestra cuando el buscador está vacío)
 export const textoContador = (cantidad, texto, sinBusqueda) =>
     texto
         ? (cantidad === 1 ? `1 resultado para “${texto}”` : `${cantidad} resultados para “${texto}”`)

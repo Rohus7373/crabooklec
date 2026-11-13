@@ -1,5 +1,3 @@
-// Crea (o actualiza) las dos cuentas de la aplicación. Ejecutar con:  npm run crear-cuentas
-// Se puede volver a ejecutar cuando quieras para cambiar una contraseña.
 import './src/cargarEnv.js'
 import { hashearClave, ROL_ADMIN, ROL_CONSULTA } from './src/auth.js'
 import cuentaService from './src/services/cuentaService.js'
@@ -8,9 +6,9 @@ import { crearPreguntador } from './src/preguntar.js'
 const consola = crearPreguntador()
 const cuentas = new cuentaService()
 
-async function pedirNombre(texto, porDefecto, prohibidos = []) {
+async function pedirNombre(texto, prohibidos = []) {
     while (true) {
-        const nombre = (await consola.preguntar(`${texto} [${porDefecto}]: `)).trim() || porDefecto
+        const nombre = (await consola.preguntar(`${texto} `)).trim()
         if (nombre.length < 3 || nombre.length > 30) console.log('  Debe tener entre 3 y 30 caracteres.')
         else if (prohibidos.some(otro => otro.toLowerCase() === nombre.toLowerCase())) console.log('  Ese nombre ya lo usa la otra cuenta.')
         else return nombre
@@ -32,12 +30,12 @@ async function pedirClave(nombre, prohibidas = []) {
 }
 
 try {
-    console.log('\nCuenta de la bibliotecaria (puede hacer todo)')
-    const nombreAdmin = await pedirNombre('Nombre de usuario', 'bibliotecaria')
+    console.log('\nCuenta de la Admin')
+    const nombreAdmin = await pedirNombre('Nombre de Admin')
     const claveAdmin = await pedirClave(nombreAdmin)
 
-    console.log('\nCuenta de consulta (solo busca libros; para estudiantes, docentes y asistentes)')
-    const nombreConsulta = await pedirNombre('Nombre de usuario', 'consulta', [nombreAdmin])
+    console.log('\nCuenta de Usuario')
+    const nombreConsulta = await pedirNombre('Nombre de usuario')
     const claveConsulta = await pedirClave(nombreConsulta, [claveAdmin])
 
     const resultadoAdmin = await cuentas.guardarCuenta({ nombre: nombreAdmin, claveHash: await hashearClave(claveAdmin), rol: ROL_ADMIN })
@@ -46,7 +44,7 @@ try {
     console.log(`\nListo: cuenta "${nombreAdmin}" ${resultadoAdmin} (admin) y cuenta "${nombreConsulta}" ${resultadoConsulta} (consulta).`)
 } catch (error) {
     console.log(`\nNo se pudieron crear las cuentas: ${error.message}`)
-    console.log('Revisa que MySQL esté iniciado y que la tabla "cuenta" exista (importa db-crabook.sql o migracion-cuentas.sql).')
+    console.log('Revisa que MySQL esté iniciado y que la tabla "cuenta" exista')
     process.exitCode = 1
 } finally {
     consola.cerrar()

@@ -1,8 +1,6 @@
 import Swal from 'sweetalert2'
 import { api, esAbortado } from './api.js'
 
-// Ventanas de SweetAlert para prestar y devolver libros (mismo diseño y comportamiento de siempre)
-
 const Aviso = {
     fire: (opciones) => Swal.mixin({
         confirmButtonColor: '#1f4e8c',
@@ -17,7 +15,6 @@ const esc = (valor) => String(valor ?? '')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
 
-// Ventana con una lista desplegable; devuelve { valor, texto } o null si cancelan
 const elegir = async ({ titulo, libro, etiqueta, opciones, confirmar }) => {
     const resultado = await Aviso.fire({
         title: titulo,
@@ -40,7 +37,6 @@ const elegir = async ({ titulo, libro, etiqueta, opciones, confirmar }) => {
     return resultado.isConfirmed ? resultado.value : null
 }
 
-// Ventana con buscador: escribes nombre o RUT y eliges de la lista (máx. 8 resultados)
 const elegirUsuario = async (libro, irARegistrar) => {
     let elegido = null
     let temporizador
@@ -140,7 +136,6 @@ const elegirUsuario = async (libro, irARegistrar) => {
     return resultado.isConfirmed ? resultado.value : null
 }
 
-// Presta un libro. Devuelve true si hubo cambios (para recargar la lista de libros)
 export async function prestarLibro(libro, irARegistrar) {
     const usuario = await elegirUsuario(libro.TITULO, irARegistrar)
     if (!usuario) return false
@@ -170,7 +165,6 @@ export async function prestarLibro(libro, irARegistrar) {
     return true
 }
 
-// Registra la devolución de un libro. Devuelve true si hubo cambios
 export async function devolverLibro(libro) {
     let prestamos
     try {
@@ -205,7 +199,6 @@ export async function devolverLibro(libro) {
     return true
 }
 
-// Confirmación para eliminar un libro
 export async function confirmarEliminarLibro() {
     const { isConfirmed } = await Swal.fire({
         title: '¿Eliminar libro?',
@@ -218,7 +211,6 @@ export async function confirmarEliminarLibro() {
     return isConfirmed
 }
 
-// Confirmación para eliminar un usuario
 export async function confirmarEliminarUsuario(nombre) {
     const { isConfirmed } = await Swal.fire({
         title: '¿Eliminar usuario?',
@@ -233,7 +225,6 @@ export async function confirmarEliminarUsuario(nombre) {
     return isConfirmed
 }
 
-// Avisos sueltos que usan varias páginas
 export const aviso = (icon, title, text, extra = {}) =>
     Swal.fire({ icon, title, text, confirmButtonColor: '#1f4e8c', ...extra })
 

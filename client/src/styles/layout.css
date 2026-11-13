@@ -1,4 +1,3 @@
-/* layout.css — barra de navegación y estructura de cada página */
 .barra {
     background: var(--lampara-oscuro);
     border-bottom: 3px solid var(--laton);
@@ -85,7 +84,6 @@
         font-size: 1.2rem;
     }
 }
-/* Quién tiene la sesión iniciada y botón para salir */
 .sesion {
     display: flex;
     align-items: center;

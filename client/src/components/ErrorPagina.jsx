@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 
-// Lo mismo que mostraba antes la vista "error"
 export default function ErrorPagina() {
     return (
         <div className="estado-vacio">

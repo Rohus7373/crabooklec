@@ -1,4 +1,3 @@
-// Mismos datos de conexión de siempre; si algún día cambian, se pueden definir en el .env
 const config = {
     client: 'mysql',
     connection: {
