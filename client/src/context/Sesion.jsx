@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { api } from '../api.js'
 
+// Guarda quién tiene la sesión iniciada: null = nadie, undefined = todavía comprobando
 const Contexto = createContext(null)
 export const useSesion = () => useContext(Contexto)
 
@@ -14,6 +15,7 @@ export function SesionProvider({ children }) {
             .catch(() => setUsuario(null))
     }, [])
 
+    // Lo dispara api.js cuando el servidor responde 401 (sesión vencida o cerrada)
     useEffect(() => {
         const vencida = () => {
             setUsuario(actual => {

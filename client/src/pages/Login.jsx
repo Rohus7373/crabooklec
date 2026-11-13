@@ -15,6 +15,7 @@ export default function Login() {
         try {
             await entrar(usuario.trim(), clave)
         } catch (falla) {
+            // Sin .status el servidor ni siquiera respondió
             setError(falla.status ? falla.message : 'No se pudo conectar con el servidor. Revisa que esté activo.')
             setClave('')
             setEnviando(false)

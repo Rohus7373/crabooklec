@@ -1,3 +1,4 @@
+// Misma lista que server/src/constantes.js
 export const ROLES = ['Estudiante', 'Docente', 'Asistente de la educación']
 
 export const CURSOS = [
@@ -5,6 +6,7 @@ export const CURSOS = [
     '3°A', '3°B', '3°C', '4°A', '4°B', '4°C'
 ]
 
+// Filtros del ranking: [valor en la URL, texto del botón]
 export const GRUPOS_RANKING = [
     ['', 'Todos'],
     ...CURSOS.map(curso => [curso, curso]),

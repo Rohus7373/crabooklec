@@ -7,12 +7,13 @@ import ErrorPagina from '../components/ErrorPagina.jsx'
 
 export default function Usuarios() {
     const input = useRef(null)
-    const [texto, setTexto] = useState('')       
-    const [consulta, setConsulta] = useState('')  
+    const [texto, setTexto] = useState('')       // lo que se está escribiendo
+    const [consulta, setConsulta] = useState('')  // lo que se está buscando
     const [usuarios, setUsuarios] = useState(null)
     const [version, setVersion] = useState(0)
     const [error, setError] = useState(false)
 
+    // Busca mientras escribes (con una pequeña pausa para no saturar la base de datos)
     useEffect(() => {
         const espera = setTimeout(() => setConsulta(texto.trim()), 250)
         return () => clearTimeout(espera)
@@ -44,6 +45,7 @@ export default function Usuarios() {
             await exito('Usuario eliminado', 1300)
             setVersion(v => v + 1)
         } catch (e) {
+            // Con .status el servidor respondió (p. ej. tiene libros sin devolver); sin .status no hubo conexión
             if (e.status) return aviso('warning', 'No se puede eliminar', e.message)
             aviso('error', 'No se pudo eliminar', 'Revisa que el servidor esté activo.')
         }

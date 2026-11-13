@@ -1,0 +1,349 @@
+/* componentes.css — botones, buscador, mensajes vacíos */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    height: 40px;
+    padding: 0 1.1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radio);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-primary {
+    background: var(--lampara);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--lampara-oscuro);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--tinta);
+    border-color: var(--linea);
+}
+.btn-secondary:hover {
+    background: var(--superficie);
+    border-color: var(--tinta-suave);
+}
+
+.btn-peligro {
+    background: transparent;
+    color: var(--sello);
+    border-color: #e3c4bf;
+}
+.btn-peligro:hover {
+    background: var(--sello);
+    color: #fff;
+    border-color: var(--sello);
+}
+
+.btn-chico {
+    height: 32px;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Buscador: una ficha de catálogo con su línea roja arriba */
+.ficha-busqueda {
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 31px,
+            rgba(31, 78, 140, 0.07) 31px,
+            rgba(31, 78, 140, 0.07) 32px
+        ),
+        var(--superficie);
+    border: 1px solid var(--linea);
+    border-top: 3px solid var(--sello);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 1.25rem 1.25rem 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ficha-busqueda label {
+    display: block;
+    font-family: var(--fuente-titulos);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.fila-busqueda {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fila-busqueda input[type="search"] {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    padding: 0 1rem;
+    font: inherit;
+    font-size: 1.05rem;
+    color: var(--tinta);
+    background: #fff;
+    border: 2px solid var(--linea);
+    border-radius: var(--radio);
+}
+
+.fila-busqueda input[type="search"]::placeholder {
+    color: #8794a5;
+}
+
+.fila-busqueda input[type="search"]:focus {
+    outline: none;
+    border-color: var(--lampara);
+    box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
+}
+
+.fila-busqueda .btn {
+    height: 48px;
+}
+
+.contador {
+    margin-top: 0.75rem;
+    color: var(--tinta-suave);
+    font-size: 0.925rem;
+}
+
+.estado-vacio {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--superficie);
+    border: 1px dashed var(--linea);
+    border-radius: var(--radio);
+}
+
+.estado-vacio h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.estado-vacio p {
+    color: var(--tinta-suave);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Ventanas de SweetAlert (prestar / devolver) con la misma tipografía del sitio */
+.swal2-popup {
+    font-family: var(--fuente-texto);
+    color: var(--tinta);
+}
+
+.swal2-title {
+    font-family: var(--fuente-titulos);
+    font-weight: 600;
+}
+
+.swal-campo {
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+.swal-campo label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.swal-campo select,
+.swal-campo input {
+    width: 100%;
+    height: 44px;
+    padding: 0 0.7rem;
+    font: inherit;
+    color: var(--tinta);
+    background: #fff;
+    border: 1px solid #b9c5d4;
+    border-radius: var(--radio);
+}
+
+.swal-campo select:focus,
+.swal-campo input:focus {
+    outline: none;
+    border-color: var(--lampara);
+    box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
+}
+
+/* Lista de resultados del buscador de usuarios */
+.swal-resultados {
+    list-style: none;
+    margin-top: 0.5rem;
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: #fff;
+}
+
+.swal-resultados li + li {
+    border-top: 1px solid var(--linea);
+}
+
+.swal-resultados button {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    text-align: left;
+    color: var(--tinta);
+    background: transparent;
+    border: none;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+}
+
+.swal-resultados button:hover {
+    background: #eef3fa;
+}
+
+.swal-resultados button.seleccionado {
+    background: #e1ebf7;
+    border-left-color: var(--laton);
+}
+
+.swal-resultados button span {
+    color: var(--tinta-suave);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.swal-vacio {
+    padding: 0.8rem;
+    color: var(--tinta-suave);
+    font-size: 0.925rem;
+}
+
+.swal-elegido {
+    margin-top: 0.6rem;
+    font-weight: 600;
+    min-height: 1.5em;
+}
+
+/* Filtros tipo pastilla (Todos / Prestados / Devueltos) */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.filtros a {
+    padding: 0.4rem 1rem;
+    color: var(--tinta);
+    font-weight: 500;
+    text-decoration: none;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.filtros a:hover {
+    border-color: var(--tinta-suave);
+}
+
+.filtros a[aria-current="true"] {
+    color: #fff;
+    background: var(--lampara);
+    border-color: var(--lampara);
+}
+
+/* Etiqueta de estado del préstamo */
+.estado {
+    display: inline-block;
+    padding: 0.15rem 0.7rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    border-radius: 999px;
+}
+
+.estado-prestado {
+    color: #6b4d0f;
+    background: #f4e2b0;
+}
+
+.estado-devuelto {
+    color: var(--lampara-oscuro);
+    background: #e1ebf7;
+}
+
+/* =========================================
+   BUSCADOR DE USUARIOS
+   Diseño similar al buscador de libros
+========================================= */
+
+.buscarUsuario .buscador-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.buscarUsuario input[type="search"] {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    padding: 0 1rem;
+
+    font: inherit;
+    font-size: 1.05rem;
+    color: var(--tinta);
+
+    background: #fff;
+    border: 2px solid var(--linea);
+    border-radius: var(--radio);
+}
+
+.buscarUsuario input[type="search"]:focus {
+    outline: none;
+    border-color: var(--lampara);
+    box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
+}
+
+/* Botón Buscar */
+
+.buscarUsuario button[type="submit"] {
+    height: 48px;
+    padding: 0 1.1rem;
+    flex-shrink: 0;
+
+    background: var(--lampara);
+    color: #fff;
+    border: 1px solid transparent;
+    border-radius: var(--radio);
+
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.buscarUsuario button[type="submit"]:hover {
+    background: var(--lampara-oscuro);
+}
+
+/* Botón Limpiar */
+
+.buscarUsuario #limpiar-busqueda {
+    height: 48px;
+    flex-shrink: 0;
+}

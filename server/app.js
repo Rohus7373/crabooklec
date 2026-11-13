@@ -1,3 +1,4 @@
+// Debe ir primero: carga el .env antes de que se lea la configuración
 import './src/cargarEnv.js'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use('/api', api)
 app.use('/api', (req, res) => res.status(404).json({ mensaje: 'Esa ruta de la API no existe.' }))
 
+// En producción el servidor también entrega la app de React ya compilada
 if (fs.existsSync(path.join(dist, 'index.html'))) {
     app.use(express.static(dist))
     app.get('/*splat', (req, res) => res.sendFile(path.join(dist, 'index.html')))

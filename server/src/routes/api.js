@@ -14,10 +14,13 @@ const P = new prestamoService()
 const C = new cuentaService()
 const api = Router()
 
+// Error "esperable" con su código HTTP (lo mismo que hacían los controladores antes)
 const falla = (mensaje, status = 400) => Object.assign(new Error(mensaje), { status })
 const existe = async (promesa) => (await promesa) || Promise.reject(falla('No se encontró el registro.', 404))
 const cuerpo = (req) => req.body ?? {}
 
+// Envuelve cada ruta: responde el resultado en JSON o el error con su código.
+// Los errores de los servicios (ErrorPrestamo, ErrorUsuario) ya traen su status y su mensaje.
 const ruta = (fn, mensajeError = 'Ocurrió un error en el servidor.') => async (req, res) => {
     try {
         res.json((await fn(req, res)) ?? { status: true })
@@ -28,6 +31,7 @@ const ruta = (fn, mensajeError = 'Ocurrió un error en el servidor.') => async (
     }
 }
 
+// El nombre, el RUT y el rol son obligatorios (el curso no); el servicio valida el resto
 const datosUsuario = (req) => {
     const { NOMBRE_USUARIO, RUT_USUARIO, ROL_USUARIO } = cuerpo(req)
     if (!NOMBRE_USUARIO || !RUT_USUARIO) throw falla('Falta el nombre o el RUT.')
@@ -35,6 +39,7 @@ const datosUsuario = (req) => {
     return cuerpo(req)
 }
 
+// ---------- Sesión ----------
 api.use(cargarSesion)
 api.use(exigirJSON)
 
@@ -63,24 +68,29 @@ api.post('/logout', (req, res) => {
     res.json({ status: true })
 })
 
+// La app pregunta aquí quién está conectado (null si nadie)
 api.get('/sesion', (req, res) => {
     res.json({ usuario: req.sesion ? { nombre: req.sesion.nombre, rol: req.sesion.rol } : null })
 })
 
+// Desde aquí hay que haber iniciado sesión
 api.use(requiereSesion)
 
+// ---------- Libros ----------
+// Buscar libros y ver cuántas copias hay disponibles: lo pueden hacer las dos cuentas
 api.get('/libros', ruta(r => {
     const texto = String(r.query.q || '').trim()
     return texto ? L.buscarLibros(texto) : L.obtenerlibros()
 }))
 
+// Todo lo que sigue es solo para la bibliotecaria (admin)
 api.use(soloAdmin)
 
 api.get('/libros/:id', ruta(r => existe(L.obtenerLibroPorId(r.params.id))))
 api.post('/libros', ruta(async r => { await L.storelibro(cuerpo(r)) }, 'No se pudo guardar el libro.'))
 api.put('/libros/:id', ruta(async r => { await L.actualizarLibro(r.params.id, cuerpo(r)) }, 'No se pudieron guardar los cambios.'))
 api.delete('/libros/:id', ruta(async r => { await L.deleteLibro(r.params.id) },
-    'No se pudo eliminar el libro. Es posible que tenga préstamos registrados.'))
+    'No se pudo eliminar el libro.'))
 
 api.get('/libros/:id/prestamos', ruta(r => L.prestamosActivos(r.params.id)))
 
@@ -88,6 +98,7 @@ api.post('/libros/:id/prestar', ruta(async r => {
     const { ID_USUARIO } = cuerpo(r)
     if (!ID_USUARIO) throw falla('Elige a quién le prestas el libro.')
     const ID_PRESTAR = await L.prestarLibro(r.params.id, ID_USUARIO)
+    // El préstamo ya quedó guardado: si falla la impresión solo se avisa
     const impresion = await P.imprimirBoleta(ID_PRESTAR)
     return { status: true, ID_PRESTAR, impresion }
 }))
@@ -98,6 +109,7 @@ api.post('/libros/:id/devolver', ruta(async r => {
     await L.devolverLibro(r.params.id, ID_PRESTAR)
 }))
 
+// ---------- Usuarios (lista, buscar y ranking van antes de /:id) ----------
 api.get('/usuarios', ruta(() => U.obtenerUsuarios()))
 api.get('/usuarios/lista', ruta(() => U.listaUsuarios()))
 api.get('/usuarios/ranking', ruta(r => U.obtenerRanking(String(r.query.grupo || ''))))
@@ -106,7 +118,10 @@ api.get('/usuarios/:id', ruta(r => existe(U.obtenerUsuarioPorId(r.params.id))))
 api.post('/usuarios', ruta(async r => { await U.storeUsuario(datosUsuario(r)) }, 'No se pudo guardar al usuario.'))
 api.put('/usuarios/:id', ruta(async r => { await U.actualizarUsuario(r.params.id, datosUsuario(r)) }))
 api.delete('/usuarios/:id', ruta(async r => { await U.eliminarUsuario(r.params.id) }))
+
+// ---------- Préstamos ----------
 api.get('/prestamos', ruta(r => P.obtenerPrestamos(r.query.estado)))
+
 api.post('/prestamos/:id/boleta', async (req, res) => {
     const problema = await P.imprimirBoleta(req.params.id)
     if (problema) return res.status(502).json({ status: false, mensaje: problema })

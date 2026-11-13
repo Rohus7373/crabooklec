@@ -2,18 +2,21 @@ import fs from 'node:fs'
 import { parseEnv } from 'node:util'
 import { fileURLToPath } from 'node:url'
 
+// Lee el archivo .env de la carpeta del proyecto (junto a app.js) y deja los valores en process.env.
+// Al arrancar avisa qué encontró, para saber rápido por qué la impresora no está configurada.
 const ruta = fileURLToPath(new URL('../.env', import.meta.url))
 
 if (!fs.existsSync(ruta)) {
     console.log(`[.env] No se encontró el archivo: ${ruta}`)
     for (const nombre of ['.env.txt', '.env.example']) {
         if (fs.existsSync(ruta + nombre.slice(4))) {
-            console.log(`[.env] Existe "${nombre}" cópialo o renómbralo como ".env".`)
+            console.log(`[.env] Existe "${nombre}": cópialo o renómbralo como ".env" (sin .txt ni .example al final).`)
         }
     }
 } else {
     try {
         const bytes = fs.readFileSync(ruta)
+        // El Bloc de notas o PowerShell a veces guardan con BOM o en UTF-16: se leen igual
         const texto = (bytes[0] === 0xff && bytes[1] === 0xfe ? bytes.toString('utf16le') : bytes.toString('utf8'))
             .replace(/^\uFEFF/, '')
         Object.assign(process.env, parseEnv(texto))

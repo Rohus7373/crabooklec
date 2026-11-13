@@ -1,11 +1,13 @@
 import readline from 'node:readline'
 
+// Preguntas por consola. Con oculto=true no se muestra lo que se escribe (para contraseñas).
 export function crearPreguntador() {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: process.stdin.isTTY })
     let silencio = false
     const escribir = rl._writeToOutput?.bind(rl)
     if (escribir) rl._writeToOutput = (texto) => { if (!silencio) escribir(texto) }
 
+    // Con entrada que no es de una terminal (pruebas), las líneas llegan todas juntas: se guardan en una cola
     const cola = []
     const espera = []
     let cerrado = false

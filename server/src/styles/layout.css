@@ -1,0 +1,112 @@
+/* layout.css — barra de navegación y estructura de cada página */
+.barra {
+    background: var(--lampara-oscuro);
+    border-bottom: 3px solid var(--laton);
+}
+
+.barra-interior {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--fuente-titulos);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    margin-right: auto;
+}
+
+.marca-logo {
+    height: 36px;
+    width: auto;
+}
+
+.enlaces {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+}
+
+.enlaces a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #d6e2f3;
+    text-decoration: none;
+    border-radius: var(--radio);
+    transition: background 0.15s, color 0.15s;
+}
+
+.enlaces a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.enlaces a[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-weight: 600;
+}
+
+.pagina {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.cabecera-pagina {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cabecera-pagina p {
+    color: var(--tinta-suave);
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 600px) {
+    .barra-interior {
+        gap: 1rem;
+    }
+    .marca {
+        font-size: 1.2rem;
+    }
+}
+/* Quién tiene la sesión iniciada y botón para salir */
+.sesion {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #d6e2f3;
+    font-size: 0.9rem;
+}
+
+.btn-salir {
+    height: 32px;
+    padding: 0 0.75rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: var(--radio);
+    cursor: pointer;
+}
+
+.btn-salir:hover {
+    background: rgba(255, 255, 255, 0.12);
+}

@@ -7,6 +7,7 @@ import ErrorPagina from '../components/ErrorPagina.jsx'
 export default function Ranking() {
     const [params] = useSearchParams()
     const pedido = params.get('grupo') || ''
+    // Solo se aceptan los grupos de la lista (curso o Docentes); cualquier otra cosa equivale a "Todos"
     const grupo = GRUPOS_RANKING.some(([valor]) => valor === pedido) ? pedido : ''
     const textoGrupo = GRUPOS_RANKING.find(([valor]) => valor === grupo)[1]
 

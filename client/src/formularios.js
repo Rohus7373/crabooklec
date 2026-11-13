@@ -1,5 +1,9 @@
 import { CURSOS, ROLES } from './constantes.js'
 
+// Definición de los 4 formularios (registrar/editar libro y usuario), con los mismos textos de siempre.
+// campo: [nombre, etiqueta, placeholder, tipo, extra]
+// extra (opcional): { opciones: [...] } para listas desplegables, { requerido: true/false } para ignorar el valor general
+
 const campoRol = ['ROL_USUARIO', 'Rol', 'Selecciona un rol', 'select', { opciones: ROLES, requerido: true }]
 const campoCurso = ['CURSO_USUARIO', 'Curso (opcional)', 'Sin curso', 'select', { opciones: CURSOS, requerido: false }]
 

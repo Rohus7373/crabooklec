@@ -1,5 +1,7 @@
+// Valores permitidos para los usuarios (el cliente tiene la misma lista en client/src/constantes.js)
 export const ROLES = ['Estudiante', 'Docente', 'Asistente de la educación']
 
+// Roles que se agrupan en el filtro "Docentes / asistentes de la educación" del ranking
 export const ROLES_PERSONAL = ['Docente', 'Asistente de la educación']
 
 export const CURSOS = [

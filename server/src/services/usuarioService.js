@@ -1,7 +1,9 @@
+
 import config from '../config/config.js'
 import knex from 'knex'
 import { CURSOS, GRUPO_PERSONAL, ROLES, ROLES_PERSONAL } from '../constantes.js'
 
+// Errores esperables
 export class ErrorUsuario extends Error {
     constructor(mensaje, status = 400) {
         super(mensaje)
@@ -9,6 +11,7 @@ export class ErrorUsuario extends Error {
     }
 }
 
+// Limpia y valida los datos de un usuario: el rol es obligatorio, el curso es opcional
 function datosUsuario(body) {
     const NOMBRE_USUARIO = String(body.NOMBRE_USUARIO ?? '').trim()
     const RUT_USUARIO = String(body.RUT_USUARIO ?? '').trim()
@@ -36,6 +39,7 @@ export default class usuarioService {
         this.knex = knex(config)
     }
 
+    // Usuarios con sus préstamos
     async obtenerUsuarios() {
         const usuarios = await this.knex('usuario as usu')
             .leftJoin('prestar as pre', 'usu.ID_USUARIO', 'pre.ID_USUARIO')
@@ -68,6 +72,7 @@ export default class usuarioService {
         }))
     }
 
+    // Lista simple para elegir usuarios
     async listaUsuarios() {
         const usuarios = await this.knex('usuario')
             .select(
@@ -82,8 +87,10 @@ export default class usuarioService {
         return JSON.parse(JSON.stringify(usuarios))
     }
 
+    // Buscar usuarios por nombre o RUT
     async buscarUsuarios(texto) {
 
+        // Si el buscador está vacío, mostrar todos
         if (!texto) {
             return this.obtenerUsuarios()
         }
@@ -139,12 +146,14 @@ export default class usuarioService {
         }))
     }
 
+    // Obtener usuario por ID
     async obtenerUsuarioPorId(ID_USUARIO) {
         return this.knex('usuario')
             .where({ ID_USUARIO })
             .first()
     }
 
+    // Actualizar usuario
     async actualizarUsuario(ID_USUARIO, body) {
         const actualizados = await this.knex('usuario')
             .where({ ID_USUARIO })
@@ -155,6 +164,7 @@ export default class usuarioService {
         }
     }
 
+    // Eliminar usuario
     async eliminarUsuario(ID_USUARIO) {
         return this.knex.transaction(async trx => {
             const usuario = await trx('usuario')
@@ -193,10 +203,13 @@ export default class usuarioService {
         })
     }
 
+    // Registrar usuario
     async storeUsuario(body) {
         return this.knex('usuario').insert(datosUsuario(body))
     }
 
+    // Ranking de usuarios
+    // grupo (opcional): un curso como '1°A', o 'Docentes' para docentes y asistentes de la educación
     async obtenerRanking(grupo) {
         const consulta = this.knex('usuario as usu')
             .innerJoin('prestar as pre', 'usu.ID_USUARIO', 'pre.ID_USUARIO')

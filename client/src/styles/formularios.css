@@ -1,3 +1,4 @@
+/* formularios.css — registrar y editar libros o usuarios */
 .form-tarjeta {
     max-width: 640px;
     margin: 0 auto;
@@ -67,6 +68,7 @@
     }
 }
 
+/* Pantalla de inicio de sesión */
 .login {
     max-width: 420px;
     margin-top: 3rem;

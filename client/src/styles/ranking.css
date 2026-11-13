@@ -1,3 +1,4 @@
+/* ranking.css — ranking de lectores */
 .ranking {
     list-style: none;
     display: grid;
@@ -59,6 +60,7 @@
     white-space: nowrap;
 }
 
+/* El primer puesto (o los empatados en él) destaca con el color latón */
 .puesto-1 {
     border-left: 5px solid var(--laton);
 }

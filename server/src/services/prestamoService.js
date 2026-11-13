@@ -1,3 +1,4 @@
+
 import config from '../config/config.js'
 import knex from 'knex'
 import { imprimirBoleta } from '../impresora/boleta.js'
@@ -7,6 +8,7 @@ export default class prestamoService {
         this.knex = knex(config)
     }
 
+    // Todos los préstamos con el libro y la persona
     async obtenerPrestamos(estado) {
         const consulta = this.knex('prestar as pre')
             .innerJoin('usuario as usu', 'pre.ID_USUARIO', 'usu.ID_USUARIO')
@@ -34,6 +36,7 @@ export default class prestamoService {
         }))
     }
 
+    // Obtener un préstamo completo para imprimir la boleta
     async obtenerPrestamo(ID_PRESTAR) {
         return this.knex('prestar as pre')
             .innerJoin('usuario as usu', 'pre.ID_USUARIO', 'usu.ID_USUARIO')
@@ -53,6 +56,7 @@ export default class prestamoService {
             .first()
     }
 
+    // Imprimir boleta
     async imprimirBoleta(ID_PRESTAR) {
         try {
             const prestamo = await this.obtenerPrestamo(ID_PRESTAR)

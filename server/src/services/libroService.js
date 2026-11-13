@@ -1,6 +1,7 @@
 import config from '../config/config.js'
 import knex from 'knex'
 
+// Errores "esperables" del préstamo (sin copias, usuario inexistente...) con su código HTTP
 export class ErrorPrestamo extends Error {
     constructor(mensaje, status = 400) {
         super(mensaje)
@@ -8,6 +9,7 @@ export class ErrorPrestamo extends Error {
     }
 }
 
+// Fecha de hoy en hora local, formato AAAA-MM-DD
 const hoy = () => new Date().toLocaleDateString('en-CA')
 
 export default class libroService{
@@ -15,6 +17,7 @@ export default class libroService{
         this.knex = knex(config)
     }
 
+    // Libros + cuántos ejemplares están prestados en este momento
     consultaLibros(){
         return this.knex('libro').select(
             'libro.*',
@@ -32,6 +35,7 @@ export default class libroService{
         const libros = await this.consultaLibros()
         return this.conDisponibles(JSON.parse(JSON.stringify(libros)))
     }
+    // Quita espacios al inicio y al final de los textos (las columnas no aceptan NULL)
     limpiarTextos(body){
         return Object.fromEntries(
             Object.entries(body).map(([clave, valor]) => [clave, typeof valor === 'string' ? valor.trim() : valor])
@@ -58,8 +62,28 @@ export default class libroService{
             .orderBy('TITULO')
         return this.conDisponibles(JSON.parse(JSON.stringify(libros)))
     }
+    // Un libro con copias sin devolver no se elimina. Si todos sus préstamos ya se devolvieron,
+    // se borra su historial de préstamos junto con el libro (la base no permite dejar préstamos sin libro).
     async deleteLibro(ID_LIBRO){
-        return await this.knex('libro').where({ ID_LIBRO: ID_LIBRO}).del()
+        return this.knex.transaction(async trx => {
+            const libro = await trx('libro').where({ ID_LIBRO }).forUpdate().first()
+            if (!libro) throw new ErrorPrestamo('Ese libro ya no existe.', 404)
+
+            const [{ activos }] = await trx('prestar')
+                .where({ ID_LIBRO, ESTADO_LIBRO: 'Prestado' })
+                .count({ activos: '*' })
+
+            if (Number(activos) > 0) {
+                const copias = Number(activos) === 1 ? 'copia prestada' : 'copias prestadas'
+                throw new ErrorPrestamo(
+                    `"${libro.TITULO}" tiene ${activos} ${copias} sin devolver. Registra la devolución antes de eliminarlo.`,
+                    409
+                )
+            }
+
+            await trx('prestar').where({ ID_LIBRO }).del()
+            await trx('libro').where({ ID_LIBRO }).del()
+        })
     }
     async obtenerLibroPorId(ID_LIBRO){
         return this.knex('libro').select('*').where({ ID_LIBRO: ID_LIBRO}).first()
@@ -68,6 +92,9 @@ export default class libroService{
     return this.knex('libro').where({ ID_LIBRO: ID_LIBRO }).update(this.limpiarTextos(body))
     }
 
+    // ---- Préstamos ----
+
+    // Quién tiene ahora este libro
     async prestamosActivos(ID_LIBRO){
         const filas = await this.knex('prestar as pre')
             .innerJoin('usuario as usu', 'pre.ID_USUARIO', 'usu.ID_USUARIO')

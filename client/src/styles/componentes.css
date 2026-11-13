@@ -1,3 +1,4 @@
+/* componentes.css — botones, buscador, mensajes vacíos */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -49,6 +50,7 @@
     font-size: 0.875rem;
 }
 
+/* Buscador: una ficha de catálogo con su línea roja arriba */
 .ficha-busqueda {
     background:
         repeating-linear-gradient(
@@ -139,6 +141,7 @@
     cursor: not-allowed;
 }
 
+/* Ventanas de SweetAlert (prestar / devolver) con la misma tipografía del sitio */
 .swal2-popup {
     font-family: var(--fuente-texto);
     color: var(--tinta);
@@ -179,6 +182,7 @@
     box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
 }
 
+/* Lista de resultados del buscador de usuarios */
 .swal-resultados {
     list-style: none;
     margin-top: 0.5rem;
@@ -236,6 +240,7 @@
     min-height: 1.5em;
 }
 
+/* Filtros tipo pastilla (Todos / Prestados / Devueltos) */
 .filtros {
     display: flex;
     flex-wrap: wrap;
@@ -264,6 +269,7 @@
     border-color: var(--lampara);
 }
 
+/* Etiqueta de estado del préstamo */
 .estado {
     display: inline-block;
     padding: 0.15rem 0.7rem;
@@ -281,6 +287,11 @@
     color: var(--lampara-oscuro);
     background: #e1ebf7;
 }
+
+/* =========================================
+   BUSCADOR DE USUARIOS
+   Diseño similar al buscador de libros
+========================================= */
 
 .buscarUsuario .buscador-contenedor {
     display: flex;
@@ -309,6 +320,8 @@
     box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
 }
 
+/* Botón Buscar */
+
 .buscarUsuario button[type="submit"] {
     height: 48px;
     padding: 0 1.1rem;
@@ -327,6 +340,8 @@
 .buscarUsuario button[type="submit"]:hover {
     background: var(--lampara-oscuro);
 }
+
+/* Botón Limpiar */
 
 .buscarUsuario #limpiar-busqueda {
     height: 48px;

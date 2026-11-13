@@ -22,6 +22,7 @@ export default function Prestamos() {
         return () => { vigente = false }
     }, [estado])
 
+    // Botón "Reimprimir" de la boleta
     const reimprimir = async (p) => {
         setImprimiendo(p.ID_PRESTAR)
         try {

@@ -5,10 +5,12 @@ import os from 'node:os'
 import path from 'node:path'
 import { execFile } from 'node:child_process'
 
+// Papel de 58 mm
 const COLUMNAS = 32
 const ESC = 0x1b
 const GS = 0x1d
 
+// Letras con tilde en CP850
 const CP850 = {
     'á': 0xa0, 'é': 0x82, 'í': 0xa1, 'ó': 0xa2, 'ú': 0xa3, 'ñ': 0xa4, 'Ñ': 0xa5,
     '¿': 0xa8, '¡': 0xad, 'ü': 0x81, 'Ü': 0x9a, 'Á': 0xb5, 'É': 0x90, 'Í': 0xd6,
@@ -28,6 +30,7 @@ function codificar(texto) {
     ))
 }
 
+// CALCULAR FECHA LÍMITE DE DEVOLUCIÓN (7 DÍAS)
 function calcularFechaDevolucion(fechaPrestamo) {
     if (!fechaPrestamo) {
         throw new Error('No se recibió la fecha del préstamo.')
@@ -67,6 +70,7 @@ function calcularFechaDevolucion(fechaPrestamo) {
     })
 }
 
+// ENVOLVER TEXTO
 function envolver(texto, ancho = COLUMNAS) {
     const lineas = []
 
@@ -101,6 +105,7 @@ function envolver(texto, ancho = COLUMNAS) {
     return lineas
 }
 
+// GENERAR CÓDIGO DE BARRAS CODE128
 function codigoBarras(valor) {
     const codigo = String(valor ?? '').trim()
 
@@ -136,6 +141,7 @@ function codigoBarras(valor) {
     return Buffer.concat(partes)
 }
 
+// ARMAR BOLETA
 export function armarBoleta(p) {
     console.log('FECHA RECIBIDA:', p.FECHA_ENTREGA)
     console.log('FECHA DEVOLUCIÓN:', p.FECHA_DEVOLUCION)
@@ -143,6 +149,8 @@ export function armarBoleta(p) {
 
     const partes = []
 
+    // Si ya devolvió el libro, mostrar la fecha real.
+    // Si sigue prestado, calcular los 7 días.
     const fechaDevolucion = p.ESTADO_LIBRO === 'Devuelto'
         ? p.FECHA_DEVOLUCION
         : calcularFechaDevolucion(p.FECHA_ENTREGA)
@@ -165,6 +173,7 @@ export function armarBoleta(p) {
         lineas(valor)
     }
 
+    // INICIALIZAR IMPRESORA
     cmd(ESC, 0x40)
 
     cmd(
@@ -173,6 +182,7 @@ export function armarBoleta(p) {
         Number(process.env.IMPRESORA_CODEPAGE ?? 2)
     )
 
+    // ENCABEZADO
     cmd(ESC, 0x61, 1)
     cmd(GS, 0x21, 0x11)
     cmd(ESC, 0x45, 1)
@@ -185,12 +195,14 @@ export function armarBoleta(p) {
     linea('Boleta de préstamo')
     linea(`N° ${p.ID_PRESTAR}`)
 
+    // ALINEAR IZQUIERDA
     cmd(ESC, 0x61, 0)
 
     separador()
 
     dato('Fecha préstamo:', p.FECHA_ENTREGA)
 
+    // FECHA DE DEVOLUCIÓN
     dato(
         p.ESTADO_LIBRO === 'Devuelto'
             ? 'Fecha de devolución:'
@@ -201,6 +213,7 @@ export function armarBoleta(p) {
     dato('Libro:', p.TITULO)
     dato('Autor:', p.AUTOR)
 
+    // CÓDIGO DE BARRAS
     cmd(ESC, 0x45, 1)
     linea('Código de barras:')
     cmd(ESC, 0x45, 0)
@@ -214,16 +227,18 @@ export function armarBoleta(p) {
 
     separador()
 
+    // MENSAJE FINAL
     cmd(ESC, 0x61, 1)
 
-    lineas('Conserve esta boleta.\nRecuerde devolver el libro.\nAsí nos gusta el LEC!!')
+    lineas('Conserve esta boleta.\nRecuerde devolver el libro.')
 
+    // AVANZAR PAPEL
     cmd(ESC, 0x64, 5)
 
     return Buffer.concat(partes)
 }
 
-//solo se usa si se configuro para que funcionara por red/cable ethernet 
+// IMPRESORA POR RED
 function enviarPorRed(datos) {
     return new Promise((resolve, reject) => {
         const socket = net.createConnection({
@@ -264,6 +279,7 @@ function enviarPorRed(datos) {
     })
 }
 
+// IMPRESORA LOCAL USB
 async function enviarLocal(datos) {
     const destino = process.env.IMPRESORA_DESTINO
 
@@ -308,6 +324,7 @@ async function enviarLocal(datos) {
     }
 }
 
+// FUNCIÓN PRINCIPAL
 export async function imprimirBoleta(prestamo) {
     const tipo = process.env.IMPRESORA_TIPO
 
