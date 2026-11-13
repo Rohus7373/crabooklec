@@ -1,0 +1,121 @@
+/* tablas.css — listado de libros y usuarios */
+.tabla-contenedor {
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.925rem;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background: var(--lampara);
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.8rem 0.7rem;
+}
+
+thead th:first-child {
+    border-top-left-radius: var(--radio);
+}
+
+thead th:last-child {
+    border-top-right-radius: var(--radio);
+}
+
+tbody td,
+tbody th {
+    padding: 0.8rem 0.7rem;
+    text-align: left;
+    border-bottom: 1px solid var(--linea);
+    vertical-align: middle;
+}
+
+tbody th {
+    color: var(--tinta-suave);
+    font-weight: 500;
+}
+
+tbody tr:last-child td,
+tbody tr:last-child th {
+    border-bottom: none;
+}
+
+.col-titulo {
+    font-family: var(--fuente-titulos);
+    font-weight: 600;
+    min-width: 9rem;
+}
+
+.col-codigo {
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-suave);
+}
+
+.fila-libro {
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.fila-libro:hover {
+    background: #eef3fa;
+}
+
+.fila-libro.activa {
+    background: #e1ebf7;
+    box-shadow: inset 4px 0 0 var(--laton);
+}
+
+.celda-acciones {
+    min-width: 11rem;
+    text-align: right;
+}
+
+.celda-acciones .btn {
+    margin: 0.15rem 0 0.15rem 0.35rem;
+}
+
+.acciones-extra {
+    display: none;
+}
+
+.fila-libro.activa .acciones-extra {
+    display: inline-flex;
+}
+
+mark {
+    background: #f4e2b0;
+    color: inherit;
+    padding: 0 0.1em;
+    border-radius: 2px;
+}
+
+.col-copias {
+    white-space: nowrap;
+}
+
+.col-copias.sin-copias {
+    color: var(--sello);
+    font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+    .tabla-contenedor {
+        overflow-x: auto;
+    }
+
+    .tabla-contenedor table {
+        min-width: 960px;
+    }
+
+    .celda-acciones {
+        white-space: nowrap;
+    }
+}

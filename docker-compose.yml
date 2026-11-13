@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./server
+    container_name: mi-backend-dev
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build: ./client
+    container_name: mi-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - backend

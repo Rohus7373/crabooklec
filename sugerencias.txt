@@ -1,0 +1,82 @@
+1.powershel ejecutar como administrador 
+comando ("Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser")
+
+2. Programas que debes instalar
+Node.js 22 LTS, desde nodejs.org. Tu proyecto necesita Node 20.12 o superior para leer el .env. Después revisa en una terminal con node -v y npm -v.
+XAMPP, para MySQL/MariaDB y phpMyAdmin. Tu archivo db-crabook.sql viene de phpMyAdmin con MariaDB, así que XAMPP es lo más compatible.
+El driver de la PR-100B, del fabricante o del CD de la impresora. Si no lo encuentras, Windows suele instalarla como “Generic / Text Only” y también funciona con tu código.
+VS Code (opcional), para editar.
+
+3. Base de datos
+Abre XAMPP y pulsa Start en MySQL. Apache solo lo necesitas para abrir phpMyAdmin.
+Entra a http://localhost/phpmyadmin.
+Crea una base llamada exactamente db-crabook, con cotejamiento utf8_spanish_ci o utf8mb4_spanish_ci. El archivo SQL no la crea solo, hay que hacerlo antes.
+Entra a esa base, ve a Importar, elige server/db-crabook.sql y pulsa Importar.
+
+4. Compartir la impresora con apodo
+Conecta la impresora por USB, enciéndela e instala el driver.
+Ve a Configuración → Bluetooth y dispositivos → Impresoras y escáneres y entra a la PR-100B. En Windows 10, usa Panel de control → Dispositivos e impresoras.
+Abre Propiedades de la impresora y luego la pestaña Compartir.
+Marca Compartir esta impresora.
+En Nombre del recurso compartido escribe PR100B. Que sea corto y sin espacios ni tildes.
+Pulsa Aplicar.
+En server/.env deja estas dos líneas, sin comillas:
+   IMPRESORA_TIPO=local
+   IMPRESORA_DESTINO=\\localhost\PR100B
+
+El nombre después de \\localhost\ debe ser idéntico al que pusiste en Compartir. Si algún día la cambias de nombre, actualiza también el .env.
+
+Prueba antes de usar el proyecto. Abre cmd y ejecuta:
+
+echo prueba > prueba.txt
+copy /b prueba.txt \\localhost\PR100B
+
+Debe decir 1 archivo(s) copiado(s) y la impresora debería sacar algo de texto. Tu código comprueba justo ese mensaje, así que si esta prueba funciona, la boleta también.
+
+Si no tienes la opción de compartir, activa “Compartir archivos e impresoras” en Configuración de uso compartido avanzado de Windows.
+
+5. Ajustes de la boleta (opcionales, en el .env)
+Si las tildes o la ñ salen raras, prueba IMPRESORA_SIN_TILDES=true.
+También puedes probar otra página de códigos con IMPRESORA_CODEPAGE=2 (es el valor por defecto) u otro número.
+Si algún día usas una impresora de red, pon IMPRESORA_TIPO=red, IMPRESORA_HOST=<ip> e IMPRESORA_PUERTO=9100.
+
+6. Arrancar el proyecto
+
+Primera vez, una sola vez:
+
+cd server
+npm install
+cd ../client
+npm install
+
+Para trabajar, con dos terminales abiertas:
+
+cd server 
+npm run dev
+cd client
+npm run dev
+
+Luego abre http://localhost:5173.
+
+Para usarlo en el mismo PC de la biblioteca, con una sola terminal:
+
+cd client && npm run build
+cd ../server && npm start
+
+Y abre http://localhost:8085.
+
+Al iniciar el servidor deberías ver estas dos líneas. Si no aparecen, el .env no se está leyendo:
+
+[.env] Leído: ...\server\.env
+[impresora] Tipo: local, destino: \\localhost\PR100B
+
+Si cambias el .env, reinicia el servidor, porque no se recarga solo.
+
+7. Para crear un Admin y usuario ejecuta en server en una cmd/terminal/powershell npm run crear-cuentas y sigue las instrucciones.
+
+8.para usar docker descargar el archivo y en la cmd wsl --install o wsl --update para actualizar la version. Reinicia el computador, inicia sesión .
+9.docker compose up --build en la cmd dentro del proyecto solo la primera vez , despues del segundo uso docker compose up / docker compose up -d (segundo plano)
+
+
+
+
