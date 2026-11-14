@@ -84,6 +84,7 @@
         font-size: 1.2rem;
     }
 }
+
 .sesion {
     display: flex;
     align-items: center;
@@ -107,4 +108,18 @@
 
 .btn-salir:hover {
     background: rgba(255, 255, 255, 0.12);
+}
+
+.insignia {
+    display: inline-block;
+    min-width: 1.35rem;
+    margin-left: 0.4rem;
+    padding: 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35rem;
+    text-align: center;
+    color: #fff;
+    background: var(--sello, #a63a2e);
+    border-radius: 999px;
 }

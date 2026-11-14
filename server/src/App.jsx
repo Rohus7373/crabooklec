@@ -14,8 +14,6 @@ const enlacesConsulta = [['/libros', 'Libros']]
 export default function App() {
     const { usuario, cargando, esAdmin, salir } = useSesion()
     const enlaces = esAdmin ? enlacesAdmin : enlacesConsulta
-
-    // Marca en la barra la sección donde estás (gana el enlace con la ruta más larga que coincida)
     const ruta = useLocation().pathname.toLowerCase()
     const actual = enlaces
         .filter(([href]) => ruta.startsWith(href))
@@ -53,7 +51,6 @@ export default function App() {
     )
 }
 
-// Bibliotecaria: todo
 function RutasAdmin() {
     return (
         <Routes>
@@ -77,7 +74,6 @@ function RutasAdmin() {
     )
 }
 
-// Cuenta de consulta: solo el catálogo, sin acciones (el servidor también lo impide)
 function RutasConsulta() {
     return (
         <Routes>

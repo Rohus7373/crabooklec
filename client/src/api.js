@@ -13,6 +13,12 @@ export async function api(url, { body, ...opciones } = {}) {
             { status: respuesta.status }
         )
     }
+
+    if (opciones.method && opciones.method !== 'GET' && url !== '/login' && url !== '/logout') {
+        window.dispatchEvent(new Event('datos:cambiaron'))
+    }
+    return datos
+
     return datos
 }
 

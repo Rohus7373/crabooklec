@@ -24,7 +24,6 @@ export function RegistroImpreso({ libros, fecha }) {
                         <th scope="col">Género</th>
                         <th scope="col">CDD</th>
                         <th scope="col">Copias</th>
-                        <th scope="col">Disponibles</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +37,6 @@ export function RegistroImpreso({ libros, fecha }) {
                             <td>{l.GENERO}</td>
                             <td>{l.CDD}</td>
                             <td>{l.N_COPIA}</td>
-                            <td>{l.DISPONIBLES}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -56,7 +54,6 @@ export default function ImprimirCatalogo() {
         let vigente = true
         api('/libros')
             .then(datos => {
-                // Ordenados por título, de la A a la Z
                 if (vigente) setLibros([...datos].sort((a, b) => String(a.TITULO).localeCompare(String(b.TITULO), 'es')))
             })
             .catch(() => { if (vigente) setError(true) })

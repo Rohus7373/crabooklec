@@ -1,5 +1,6 @@
 import config from '../config/config.js'
 import knex from 'knex'
+import { MAX_LIBROS_PRESTADOS } from '../constantes.js'
 
 export class ErrorPrestamo extends Error {
     constructor(mensaje, status = 400) {
@@ -105,7 +106,7 @@ export default class libroService{
             const libro = await trx('libro').where({ ID_LIBRO }).forUpdate().first()
             if (!libro) throw new ErrorPrestamo('Ese libro ya no existe.', 404)
 
-            const usuario = await trx('usuario').where({ ID_USUARIO }).first()
+            const usuario = await trx('usuario').where({ ID_USUARIO }).forUpdate().first()            
             if (!usuario) throw new ErrorPrestamo('Esa persona no está registrada.', 404)
 
             const [{ total }] = await trx('prestar')
@@ -119,7 +120,16 @@ export default class libroService{
                 .where({ ID_LIBRO, ID_USUARIO, ESTADO_LIBRO: 'Prestado' })
                 .first()
             if (yaLoTiene) throw new ErrorPrestamo('Esa persona ya tiene este libro prestado.', 409)
-
+            
+            const [{ prestados }] = await trx('prestar')
+                .where({ ID_USUARIO, ESTADO_LIBRO: 'Prestado' })
+                .count({ prestados: '*' })
+            if (Number(prestados) >= MAX_LIBROS_PRESTADOS) {
+                throw new ErrorPrestamo(
+                    `${usuario.NOMBRE_USUARIO} ya tiene ${prestados} libros prestados. Debe devolver uno antes de pedir otro.`,
+                    409
+                )
+            }
             const [id] = await trx('prestar').insert({
                 ID_USUARIO,
                 ID_LIBRO,

@@ -107,7 +107,7 @@ api.put('/usuarios/:id', ruta(async r => { await U.actualizarUsuario(r.params.id
 api.delete('/usuarios/:id', ruta(async r => { await U.eliminarUsuario(r.params.id) }))
 
 api.get('/prestamos', ruta(r => P.obtenerPrestamos(r.query.estado)))
-
+api.get('/prestamos/atrasados', ruta(() => P.obtenerAtrasados()))
 api.post('/prestamos/:id/boleta', async (req, res) => {
     const problema = await P.imprimirBoleta(req.params.id)
     if (problema) return res.status(502).json({ status: false, mensaje: problema })

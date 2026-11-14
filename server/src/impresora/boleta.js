@@ -3,6 +3,7 @@ import net from 'node:net'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
+import { sumarDiasHabiles } from '../plazo.js'
 import { execFile } from 'node:child_process'
 
 const COLUMNAS = 32
@@ -57,8 +58,8 @@ function calcularFechaDevolucion(fechaPrestamo) {
     if (Number.isNaN(fecha.getTime())) {
         throw new Error('La fecha del préstamo no es válida.')
     }
-
-    fecha.setDate(fecha.getDate() + 7)
+    
+    fecha = sumarDiasHabiles(fecha)
 
     return fecha.toLocaleDateString('es-CL', {
         day: '2-digit',

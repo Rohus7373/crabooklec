@@ -4,8 +4,6 @@ import { api } from '../api.js'
 import { aviso, exito } from '../dialogos.js'
 import ErrorPagina from './ErrorPagina.jsx'
 
-// Un mismo formulario sirve para registrar y editar (libros y usuarios).
-// Si hay :id en la ruta, primero carga el registro; si no existe, muestra la página de error.
 export default function Formulario({ config }) {
     const { id } = useParams()
     const navegar = useNavigate()
@@ -76,7 +74,6 @@ export default function Formulario({ config }) {
         </>
     )
 
-    // Editar: <div class="form-tarjeta"><h1/><form/></div>   Registrar: <form class="form-tarjeta"><h1/>...</form>
     if (config.envoltura) {
         return (
             <div className={config.envoltura}>

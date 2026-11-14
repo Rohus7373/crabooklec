@@ -8,3 +8,5 @@ export const CURSOS = [
 ]
 
 export const GRUPO_PERSONAL = 'Docentes'
+
+export const MAX_LIBROS_PRESTADOS = 4

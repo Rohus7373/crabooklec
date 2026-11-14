@@ -6,16 +6,18 @@ import Ranking from './pages/Ranking.jsx'
 import Login from './pages/Login.jsx'
 import Formulario from './components/Formulario.jsx'
 import ImprimirCatalogo from './pages/ImprimirCatalogo.jsx'
+import Atrasados from './pages/Atrasados.jsx'
+import { useAtrasados } from './useAtrasados.js'
 import { useSesion } from './context/Sesion.jsx'
 import { editarLibro, editarUsuario, registrarLibro, registrarUsuario } from './formularios.js'
 
-const enlacesAdmin = [['/libros', 'Libros'], ['/usuarios', 'Usuarios'], ['/prestamos', 'Préstamos'], ['/usuarios/ranking', 'Ranking']]
+const enlacesAdmin = [['/libros', 'Libros'], ['/usuarios', 'Usuarios'], ['/prestamos', 'Préstamos'], ['/prestamos/atrasados', 'Atrasados'], ['/usuarios/ranking', 'Ranking']]
 const enlacesConsulta = [['/libros', 'Libros']]
 
 export default function App() {
     const { usuario, cargando, esAdmin, salir } = useSesion()
     const enlaces = esAdmin ? enlacesAdmin : enlacesConsulta
-
+    const atrasados = useAtrasados(esAdmin)
     const ruta = useLocation().pathname.toLowerCase()
     const actual = enlaces
         .filter(([href]) => ruta.startsWith(href))
@@ -34,7 +36,12 @@ export default function App() {
                             <ul className="enlaces">
                                 {enlaces.map(([href, texto]) => (
                                     <li key={href}>
-                                        <Link to={href} aria-current={href === actual ? 'page' : undefined}>{texto}</Link>
+                                        <Link to={href} aria-current={href === actual ? 'page' : undefined}>
+                                            {texto}
+                                            {href === '/prestamos/atrasados' && atrasados > 0 && (
+                                                <span className="insignia" title="Préstamos con el plazo vencido">{atrasados}</span>
+                                            )}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
@@ -67,6 +74,7 @@ function RutasAdmin() {
             <Route path="/usuarios/editar/:id" element={<Formulario key="editar-usuario" config={editarUsuario} />} />
             <Route path="/usuarios/ranking" element={<Ranking />} />
             <Route path="/prestamos" element={<Prestamos />} />
+            <Route path="/prestamos/atrasados" element={<Atrasados />} />
             <Route path="*" element={
                 <div className="estado-vacio">
                     <h2>Página no encontrada</h2>
