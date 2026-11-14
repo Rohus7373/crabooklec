@@ -8,10 +8,10 @@ import ErrorPagina from '../components/ErrorPagina.jsx'
 export default function Libros({ soloLectura = false }) {
     const navegar = useNavigate()
     const input = useRef(null)
-    const [texto, setTexto] = useState('')       // lo que se está escribiendo
-    const [consulta, setConsulta] = useState('')  // lo que se está buscando
-    const [libros, setLibros] = useState(null)    // null = todavía no carga
-    const [version, setVersion] = useState(0)     // sube para volver a pedir la lista
+    const [texto, setTexto] = useState('')       
+    const [consulta, setConsulta] = useState('')  
+    const [libros, setLibros] = useState(null)    
+    const [version, setVersion] = useState(0)     
     const [error, setError] = useState(false)
     const [activa, setActiva] = useState(null)
 
@@ -70,7 +70,12 @@ export default function Libros({ soloLectura = false }) {
                         ? 'Busca un libro para ver cuántas copias hay disponibles.'
                         : 'Busca un libro o selecciona una fila para prestarlo o registrar su devolución.'}</p>
                 </div>
-                {!soloLectura && <Link className="btn btn-primary" to="/libros/create">Registrar libro</Link>}
+                {!soloLectura && (
+                    <div>
+                        <Link className="btn btn-secondary" to="/libros/imprimir">Imprimir catálogo</Link>
+                        <Link className="btn btn-primary" to="/libros/create">Registrar libro</Link>
+                    </div>
+                )}
             </div>
 
             <section className="ficha-busqueda">

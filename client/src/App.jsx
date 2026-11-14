@@ -5,6 +5,7 @@ import Prestamos from './pages/Prestamos.jsx'
 import Ranking from './pages/Ranking.jsx'
 import Login from './pages/Login.jsx'
 import Formulario from './components/Formulario.jsx'
+import ImprimirCatalogo from './pages/ImprimirCatalogo.jsx'
 import { useSesion } from './context/Sesion.jsx'
 import { editarLibro, editarUsuario, registrarLibro, registrarUsuario } from './formularios.js'
 
@@ -59,6 +60,7 @@ function RutasAdmin() {
             <Route path="/login" element={<Navigate to="/libros" replace />} />
             <Route path="/libros" element={<Libros />} />
             <Route path="/libros/create" element={<Formulario key="registrar-libro" config={registrarLibro} />} />
+            <Route path="/libros/imprimir" element={<ImprimirCatalogo />} />
             <Route path="/libros/editar/:id" element={<Formulario key="editar-libro" config={editarLibro} />} />
             <Route path="/usuarios" element={<Usuarios />} />
             <Route path="/usuarios/create" element={<Formulario key="registrar-usuario" config={registrarUsuario} />} />

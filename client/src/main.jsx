@@ -8,6 +8,8 @@ import './styles/componentes.css'
 import './styles/tablas.css'
 import './styles/formularios.css'
 import './styles/ranking.css'
+import './styles/ranking.css'
+import './styles/imprimir.css'
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
